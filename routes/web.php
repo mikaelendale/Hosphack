@@ -9,7 +9,7 @@ Route::get('/', function () {
 
 Route::get('/docs', function () {
     return Inertia::render('docs/page');
-})->name('home');
+})->name('DocumentationPage');
 
 
 Route::middleware(['auth', 'verified'])->group(function () {

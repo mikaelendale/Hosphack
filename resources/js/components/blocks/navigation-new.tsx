@@ -74,10 +74,6 @@ const navItems: NavItem[] = [
         ],
     },
     {
-        title: 'Pricing',
-        href: '/pricing',
-    },
-    {
         title: 'Resources',
         href: '/resources',
         children: [
@@ -97,6 +93,10 @@ const navItems: NavItem[] = [
                 description: 'Join our growing community',
             },
         ],
+    },
+    {
+        title: 'Docs',
+        href: '/docs',
     },
 ];
 
