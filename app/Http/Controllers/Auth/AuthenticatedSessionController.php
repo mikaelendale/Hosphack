@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -20,7 +19,7 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('auth/login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => $request->session()->get('status'),
+            'status'           => $request->session()->get('status'),
         ]);
     }
 
@@ -29,13 +28,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Authenticate the user
         $request->authenticate();
 
+        // Regenerate the session to prevent session fixation
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
-    }
+        // Redirect based on role
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard'); // Redirect to admin dashboard
+        }
 
+        if (Auth::user()->role === 'user') {
+            return redirect()->route('user.dashboard'); // Redirect to user dashboard
+        }
+
+                                          // Fallback redirection if no matching role is found
+        return redirect()->route('home'); // Default fallback to home
+    }
     /**
      * Destroy an authenticated session.
      */
