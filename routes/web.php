@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Middleware\RedirectBasedOnRole;
-use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AgentController;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -13,20 +15,16 @@ Route::get('/docs', function () {
     return Inertia::render('docs/page');
 })->name('DocumentationPage');
 
-Route::get('/dashboard', function () {
-    // This route is just a placeholder; the middleware will handle redirection.
-})->middleware([RedirectBasedOnRole::class])->name('dashboard');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
+    ->name('admin.dashboard')
+    ->middleware(['auth', 'verified', 'role:admin']);
+Route::get('/agent/dashboard', [AgentController::class, 'dashboard'])
+    ->name('agent.dashboard')
+    ->middleware(['auth', 'verified', 'role:agent']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/admin', function () {
-        return Inertia::render('admin/dashboard');
-    })->name('admin.dashboard');
-
-    Route::get('/user', function () {
-        return Inertia::render('user/dashboard');
-    })->name('user.dashboard');
+    Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 });
-
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
