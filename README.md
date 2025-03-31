@@ -100,3 +100,5 @@ php artisan view:clear
 ---
 Your Laravel project is now set up and ready to run! 🚀
 
+For more visit the docs 
+![alt text](image.png)
