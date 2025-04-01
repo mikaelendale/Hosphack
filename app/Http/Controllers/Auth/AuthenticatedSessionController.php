@@ -33,16 +33,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Check if the user is an admin or agent
-        $url= "";
-        if (Auth::user()->role == 'admin') {
-            $url = 'admin/dashboard';
-        }  elseif (Auth::user()->role == 'agent') {
-            $url = 'agent/dashboard';
-        } else {
-            $url = 'dashboard';
-        }
-        return redirect()->intended($url);
+        return redirect()->intended(route('dashboard', absolute: false));
+
     }
 
     /**

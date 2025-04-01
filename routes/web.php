@@ -1,11 +1,8 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AgentController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -15,15 +12,33 @@ Route::get('/docs', function () {
     return Inertia::render('docs/page');
 })->name('DocumentationPage');
 
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
-    ->name('admin.dashboard')
-    ->middleware(['auth', 'verified', 'role:admin']);
-Route::get('/agent/dashboard', [AgentController::class, 'dashboard'])
-    ->name('agent.dashboard')
-    ->middleware(['auth', 'verified', 'role:agent']);
+// Auto-redirect
+Route::get('/dashboard', function () {
+    return redirect('/' . rolePrefix() . '/dashboard');
+})
+    ->name('dashboard')
+    ->middleware(['auth', 'verified']);
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+// Protected routes (all roles)
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
+        requireRole('admin');
+        return Inertia::render('admin/dashboard');
+    });
+});
+
+Route::prefix('agent')->group(function () {
+    Route::get('/dashboard', function () {
+        requireRole('agent');
+        return Inertia::render('agent/dashboard');
+    });
+});
+
+Route::prefix('user')->group(function () {
+    Route::get('/dashboard', function () {
+        requireRole('user');
+        return Inertia::render('user/dashboard');
+    });
 });
 
 require __DIR__ . '/settings.php';
