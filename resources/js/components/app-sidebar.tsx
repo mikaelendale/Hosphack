@@ -2,18 +2,47 @@ import { NavFooter } from '@/components/blocks/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, Folder, Headset, LayoutGrid, Settings, User2 } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
+type NavItem = {
+    title: string;
+    href: string;
+    icon: React.ComponentType;
+    roles?: ('admin' | 'agent' | 'user')[];
+};
+
+const useNavItems = () => {
+    const { user } = usePage().props.auth;
+
+    const allNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: `/${user.role}/dashboard`,
+            icon: LayoutGrid,
+        },
+        {
+            title: 'Users',
+            href: '/admin/users',
+            icon: User2,
+            roles: ['admin'],
+        },
+        {
+            title: 'Tickets',
+            href: '/agent/tickets',
+            icon: Headset,
+            roles: ['agent'],
+        },
+        // {
+        //     title: 'Settings',
+        //     href: '/settings',
+        //     icon: Settings,
+        // },
+    ];
+
+    return allNavItems.filter((item) => !item.roles || item.roles.includes(user.role));
+};
 
 const footerNavItems: NavItem[] = [
     {
@@ -29,6 +58,8 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const mainNavItems = useNavItems();
+
     return (
         <Sidebar collapsible="icon" variant="floating">
             <SidebarHeader>

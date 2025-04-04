@@ -1,25 +1,21 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+ 
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { CreditCard, DollarSign, Users } from "lucide-react"
+import { CreditCard, DollarSign, Users as UsersIcon } from "lucide-react"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { RecentActivity } from "@/components/demo/recent"
-import { Overview } from '@/components/demo/overview';
-
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card" 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Admin Dashboard',
-        href: '/dashboard',
+        title: 'Users',
+        href: '/admin/users',
     },
 ];
 
-export default function Dashboard() {
+export default function Users() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title="Users" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <Card>
@@ -45,7 +41,7 @@ export default function Dashboard() {
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-                            <Users className="text-muted-foreground h-4 w-4" />
+                            <UsersIcon className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">+12,234</div>

@@ -19,27 +19,10 @@ Route::get('/dashboard', function () {
     ->name('dashboard')
     ->middleware(['auth', 'verified']);
 
-// Protected routes (all roles)
-Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        requireRole('admin');
-        return Inertia::render('admin/dashboard');
-    });
-});
 
-Route::prefix('agent')->group(function () {
-    Route::get('/dashboard', function () {
-        requireRole('agent');
-        return Inertia::render('agent/dashboard');
-    });
-});
-
-Route::prefix('user')->group(function () {
-    Route::get('/dashboard', function () {
-        requireRole('user');
-        return Inertia::render('user/dashboard');
-    });
-});
-
+    Route::get('/users', function () {
+        return Inertia::render('users/index');
+    })->name('UsersIndex');
+  
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
