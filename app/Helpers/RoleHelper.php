@@ -5,11 +5,11 @@ use Illuminate\Support\Facades\Auth;
 if (! function_exists('rolePrefix')) {
     function rolePrefix()
     {
-        $user = Auth::user();
-        if (! $user) {
-            abort(403);
+        if (! Auth::check()) {
+            return redirect('/login');
         }
 
+        $user = Auth::user();
         return $user->role; // 'admin', 'agent', or 'user'
     }
 }

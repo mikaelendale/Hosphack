@@ -6,22 +6,26 @@ use Illuminate\Http\Request;
 
 class RedirectIfAuthenticated
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
         if (! $request->user()) {
             return redirect('/login');
         }
 
-        // Determine dashboard URL based on user role
-        $dashboardUrl = match ($request->user()->role) {
-            'admin' => '/admin/dashboard',
-            'agent' => '/agent/dashboard',
-            'user' => '/user/dashboard',
-            default => '/login'
-        };
+        $userRole = $request->user()->role;
 
-        return collect(['admin', 'agent', 'user'])->contains(fn($prefix) => str_starts_with($request->path(), $prefix))
-        ? redirect($dashboardUrl)
-        : $next($request);
+        // Redirect to the dashboard if the user's role matches the allowed roles
+        if (in_array($userRole, $roles)) {
+            $dashboardUrl = match ($userRole) {
+                'admin' => '/admin/dashboard',
+                'agent' => '/agent/dashboard',
+                'user' => '/user/dashboard',
+                default => '/login'
+            };
+
+            return redirect($dashboardUrl);
+        }
+
+        return $next($request);
     }
 }
