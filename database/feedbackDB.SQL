@@ -59,3 +59,14 @@ erDiagram
         int negative
         int neutral
     }
+
+
+
+
+-- Create indexes for frequently queried columns
+CREATE INDEX idx_feedbacks_location ON feedbacks(location_id);
+CREATE INDEX idx_feedbacks_sentiment ON feedbacks(sentiment);
+CREATE INDEX idx_feedbacks_status ON feedbacks(status);
+CREATE INDEX idx_responses_feedback ON responses(feedback_id);
+CREATE INDEX idx_alerts_feedback ON alerts(feedback_id);
+CREATE INDEX idx_alerts_escalated ON alerts(escalated_to);
