@@ -4,9 +4,26 @@ use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\{
+    RoleController,
+    InspectionTemplateController,
+    InspectionController,
+    TaskController,
+    MediaController
+};
+
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('roles', RoleController::class)->except(['show']);
+    Route::resource('templates', InspectionTemplateController::class);
+    Route::resource('inspections', InspectionController::class);
+    Route::resource('tasks', TaskController::class)->except(['create', 'store', 'destroy']);
+    Route::post('/media', [MediaController::class, 'store'])->name('media.store');
+    Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+});
 
 Route::get('/docs', function () {
     return Inertia::render('docs/page');
@@ -43,3 +60,4 @@ Route::prefix('user')->group(function () {
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
+
